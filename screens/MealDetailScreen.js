@@ -1,10 +1,22 @@
-import React from 'react';
+import React, {useEffect, useCallback} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
-import {MEALS} from '../data/dummy-data';
+import {useSelector, useDispatch} from 'react-redux';
+import {toggleFavorite} from '../store/actions/meals';
 
-const MealDetailScreen = ({route}) => {
+const MealDetailScreen = ({route, navigation}) => {
   const mealId = route.params.mealId;
-  const {title} = MEALS.find(meal => meal.id === mealId);
+  const availableMeals = useSelector(state => state.meals.meals);
+  const {title} = availableMeals.find(meal => meal.id === mealId);
+  const dispatch = useDispatch();
+
+  const toggleFavoriteHandler = useCallback(() => {
+    dispatch(toggleFavorite(mealId));
+  }, [dispatch, mealId]);
+
+  useEffect(() => {
+    navigation.setParams({toggleFav: toggleFavoriteHandler});
+  }, [navigation, toggleFavoriteHandler]);
+
   return (
     <View style={styles.screen}>
       <Text>{title}</Text>

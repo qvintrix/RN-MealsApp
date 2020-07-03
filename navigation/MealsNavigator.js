@@ -3,12 +3,12 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {createDrawerNavigator} from '@react-navigation/drawer';
+import {Platform} from 'react-native';
 import CategoriesScreen from '../screens/CategoriesScreen';
 import CategoryMealsScreen from '../screens/CategoryMealsScreen';
 import MealDetailScreen from '../screens/MealDetailScreen';
 import Colors from '../constants/Colors';
-import {Platform} from 'react-native';
-import {CATEGORIES, MEALS} from '../data/dummy-data';
+import {CATEGORIES} from '../data/dummy-data';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import FiltersScreen from '../screens/FiltersScreen';
@@ -69,8 +69,9 @@ function MealsNavigator() {
         name="MealDetail"
         component={MealDetailScreen}
         options={({route}) => {
-          const mealId = route.params.mealId;
-          const {title} = MEALS.find(meal => meal.id === mealId);
+          const title = route.params.mealTitle;
+          const toggleHandler = route.params.toggleFav;
+
           return {
             title,
             headerRight: () => (
@@ -79,9 +80,7 @@ function MealsNavigator() {
                 backgroundColor="transparent"
                 color={Colors.primaryColor}
                 underlayColor="transparent"
-                onPress={() => {
-                  console.log('favorite');
-                }}
+                onPress={toggleHandler}
               />
             ),
           };
@@ -121,8 +120,7 @@ function FavoritesStackNavigator() {
         name="MealDetail"
         component={MealDetailScreen}
         options={({route}) => {
-          const mealId = route.params.mealId;
-          const {title} = MEALS.find(meal => meal.id === mealId);
+          const title = route.params.mealTitle;
           return {
             title,
             headerRight: () => (
